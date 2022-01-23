@@ -17,7 +17,7 @@ public class UserController : Controller
     }
     [HttpPost]
     [Route("")]
-    public async Task<ActionResult<UserDTO>> CreateAccount(CreateAccountDTO createAccountDto)
+    public async Task<ActionResult<UserDTO>> CreateAccount([FromBody] CreateAccountDTO createAccountDto)
     {
         var isUsernameTaken = await _service.IsUsernameTaken(createAccountDto.Username);
         if (isUsernameTaken)
@@ -32,7 +32,7 @@ public class UserController : Controller
 
     [HttpPost]
     [Route("login")]
-    public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDto)
+    public async Task<ActionResult<UserDTO>> Login([FromBody] LoginDTO loginDto)
     {
         try
         {
@@ -47,7 +47,7 @@ public class UserController : Controller
 
     [HttpPost]
     [Route("auth")]
-    public async Task<ActionResult<UserDTO>> Auth(string token)
+    public async Task<ActionResult<UserDTO>> Auth([FromQuery] string token)
     {
         try
         {
