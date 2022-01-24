@@ -1,12 +1,16 @@
+using Microsoft.Net.Http.Headers;
 using Server.Business.Model;
 using Server.Business.services;
 using Server.Domain.services;
 
 var builder = WebApplication.CreateBuilder(args);
+var frontendOrigins = "_reactOrigin";
 
 // Add services to the container.
+builder.Services.AddCors(options => options.AddPolicy(name: frontendOrigins, policyBuilder =>
 
-builder.Services.AddCors();
+    policyBuilder.WithOrigins("http://localhost:3002").AllowAnyHeader()
+));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -24,9 +28,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(x => x.WithOrigins("localhost:3000"));
-
 app.UseHttpsRedirection();
+
+app.UseCors(frontendOrigins);
 
 app.UseAuthorization();
 

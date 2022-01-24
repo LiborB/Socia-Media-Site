@@ -9,51 +9,56 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
-import { isEmpty, values } from "lodash";
+import { isEmpty, isEqual, values } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useSetRecoilState } from "recoil";
 import { User } from "../models/user";
 import { userState } from "../store/userStore";
 
-const LoginContainer = styled(Box)({
+const RegisterContainer = styled(Box)({
   width: "100%",
   display: "flex",
   justifyContent: "center",
 });
 
-const LoginContent = styled(Paper)({
+const RegisterContent = styled(Paper)({
   width: "50%",
   display: "flex",
   justifyContent: "center",
 });
 
-const LoginForm = styled("form")({
+const RegisterForm = styled("form")({
   width: "100%",
   padding: 16,
 });
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
   const setUser = useSetRecoilState(userState);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [formError, setFormError] = useState({
+    firstName: "",
+    lastName: "",
     username: "",
     password: "",
+    confirmPassword: "",
   });
   const { error, isLoading, data, refetch } = useQuery(
-    "login",
-    () => {
-      if (username && password) {
-        return axios
-          .post<User>("/user/login", {
-            username: username,
-            password: password,
-          })
-          .then((response) => response.data);
-      }
+    "register",
+    async () => {
+      const response = await axios.post<User>("/user", {
+        username: username,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
+      });
+      return response.data;
     },
     {
       enabled: false,
@@ -77,6 +82,14 @@ export default function Login() {
     }
   }, [data]);
 
+  function handleFirstNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setFirstName(e.currentTarget.value);
+  }
+
+  function handleLastNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setLastName(e.currentTarget.value);
+  }
+
   function handleUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
     setUsername(e.currentTarget.value);
   }
@@ -85,14 +98,26 @@ export default function Login() {
     setPassword(e.currentTarget.value);
   }
 
+  function handleConfirmPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setConfirmPassword(e.currentTarget.value);
+  }
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
     const newFormError = {} as typeof formError;
+    if (!firstName) {
+      newFormError.firstName = "Please enter your first name.";
+    }
+    if (!lastName) {
+      newFormError.lastName = "Please enter your last name.";
+    }
     if (!username) {
       newFormError.username = "Please enter your username.";
     }
     if (!password) {
       newFormError.password = "Please enter your password.";
+    }
+    if (confirmPassword !== password) {
+      newFormError.confirmPassword = "Your password does not match";
     }
 
     if (values(newFormError).every(isEmpty)) {
@@ -102,12 +127,31 @@ export default function Login() {
   }
 
   return (
-    <LoginContainer>
-      <LoginContent>
-        <LoginForm onSubmit={handleSubmit}>
+    <RegisterContainer>
+      <RegisterContent>
+        <RegisterForm onSubmit={handleSubmit}>
           <Stack direction="column" spacing={2}>
-            <Typography variant="h4">Login to your account</Typography>
+            <Typography variant="h4">Create a new account</Typography>
             <TextField
+              required
+              value={firstName}
+              onChange={handleFirstNameChange}
+              variant="outlined"
+              label="First Name"
+              error={!!formError.firstName}
+              helperText={formError.firstName}
+            />
+            <TextField
+              required
+              value={lastName}
+              onChange={handleLastNameChange}
+              variant="outlined"
+              label="Last Name"
+              error={!!formError.lastName}
+              helperText={formError.lastName}
+            />
+            <TextField
+              required
               value={username}
               onChange={handleUsernameChange}
               variant="outlined"
@@ -116,12 +160,22 @@ export default function Login() {
               helperText={formError.username}
             />
             <TextField
+              required
               value={password}
               onChange={handlePasswordChange}
               variant="outlined"
               label="Password"
               error={!!formError.password}
               helperText={formError.password}
+            />
+            <TextField
+              required
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+              variant="outlined"
+              label="Confirm Password"
+              error={!!formError.confirmPassword}
+              helperText={formError.confirmPassword}
             />
 
             <Box display="flex" width="100%" justifyContent="end">
@@ -130,13 +184,12 @@ export default function Login() {
                 loading={isLoading}
                 variant="contained"
               >
-                Login
+                Create Account
               </LoadingButton>
             </Box>
-            <Link to="/register">Don't have an account? Create one</Link>
           </Stack>
-        </LoginForm>
-      </LoginContent>
-    </LoginContainer>
+        </RegisterForm>
+      </RegisterContent>
+    </RegisterContainer>
   );
 }
