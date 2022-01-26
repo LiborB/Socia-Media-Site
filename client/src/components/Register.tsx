@@ -84,27 +84,29 @@ export default function Register() {
     }
   }, [data]);
 
-  function handleFirstNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFirstName(e.currentTarget.value);
-  }
+  };
 
-  function handleLastNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLastName(e.currentTarget.value);
-  }
+  };
 
-  function handleUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.currentTarget.value);
-  }
+  };
 
-  function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.currentTarget.value);
-  }
+  };
 
-  function handleConfirmPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setConfirmPassword(e.currentTarget.value);
-  }
+  };
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newFormError = {} as typeof formError;
     if (!firstName) {
@@ -127,7 +129,7 @@ export default function Register() {
       refetch();
     }
     setFormError(newFormError);
-  }
+  };
 
   return (
     <RegisterContainer>

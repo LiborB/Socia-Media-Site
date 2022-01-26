@@ -25,6 +25,7 @@ public class UserService : IUserService
             LastName = createAccountDto.LastName,
             Username = createAccountDto.Username,
             Created = DateTime.UtcNow,
+            Updated = DateTime.UtcNow,
             Token = Guid.NewGuid().ToString(),
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(createAccountDto.Password)
         };

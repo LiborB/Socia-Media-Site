@@ -10,4 +10,5 @@ public class User
     public string Token { get; set; }
     public DateTime Created { get; set; }
     public DateTime Updated { get; set; }
+    public ICollection<Post> Posts { get; set; }
 }

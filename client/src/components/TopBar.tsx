@@ -6,7 +6,7 @@ interface Props {
   hidden: boolean;
 }
 
-export default function TopBar(props: Props) {
+function TopBar(props: Props) {
   const navigate = useNavigate();
 
   return (
@@ -30,3 +30,5 @@ export default function TopBar(props: Props) {
     </Fragment>
   );
 }
+
+export default React.memo(TopBar);

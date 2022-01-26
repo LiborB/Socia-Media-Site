@@ -79,15 +79,15 @@ export default function Login() {
     }
   }, [data]);
 
-  function handleUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.currentTarget.value);
-  }
+  };
 
-  function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.currentTarget.value);
-  }
+  };
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newFormError = {} as typeof formError;
     if (!username) {
@@ -101,7 +101,7 @@ export default function Login() {
       refetch();
     }
     setFormError(newFormError);
-  }
+  };
 
   return (
     <LoginContainer>

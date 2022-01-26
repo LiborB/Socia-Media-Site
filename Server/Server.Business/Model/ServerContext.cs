@@ -5,7 +5,8 @@ namespace Server.Business.Model;
 public class ServerContext : DbContext
 {
     public DbSet<User> Users { get; set; }
-    
+    public DbSet<Post> Posts { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(

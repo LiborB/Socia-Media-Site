@@ -80,7 +80,9 @@ function App() {
       <TopBar hidden={!!!user} />
       <Box p={4}>
         {isLoading ? (
-          <CircularProgress />
+          <Box position="fixed" left="50%" top="50%">
+            <CircularProgress />
+          </Box>
         ) : (
           <Routes>
             <Route path="/" element={<Home></Home>} />
