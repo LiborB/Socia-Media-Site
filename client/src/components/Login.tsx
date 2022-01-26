@@ -72,6 +72,8 @@ export default function Login() {
 
   useEffect(() => {
     if (data) {
+      localStorage.setItem("access_token", data.token);
+      axios.defaults.headers.common["Authorization"] = data.token;
       setUser(data);
       navigate("/");
     }
@@ -116,6 +118,7 @@ export default function Login() {
               helperText={formError.username}
             />
             <TextField
+              type="password"
               value={password}
               onChange={handlePasswordChange}
               variant="outlined"

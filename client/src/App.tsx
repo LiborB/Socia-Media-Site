@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import {
@@ -12,17 +12,34 @@ import {
 import Home from "./components/Home";
 import Login from "./components/Login";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-import { RecoilRoot, useSetRecoilState } from "recoil";
+import { RecoilRoot, useRecoilState, useSetRecoilState } from "recoil";
 import axios from "axios";
-import { Box, CircularProgress, Container } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { userState } from "./store/userStore";
 import { User } from "./models/user";
 import Register from "./components/Register";
+import TopBar from "./components/TopBar";
+import CreatePost from "./components/CreatePost";
 
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const token = useRef(localStorage.getItem("access_token"));
+  const isLoginPage = useMemo(
+    () =>
+      location.pathname.includes("/login") ||
+      location.pathname.includes("/register"),
+    [location.pathname]
+  );
   const { isLoading, isError, data } = useQuery(
     "auth",
     () => {
@@ -41,14 +58,11 @@ function App() {
       refetchOnWindowFocus: false,
     }
   );
-  const setUser = useSetRecoilState(userState);
+  const [user, setUser] = useRecoilState(userState);
 
   useEffect(() => {
-    if (
-      (isError || !token.current) &&
-      !location.pathname.includes("/login") &&
-      !location.pathname.includes("/register")
-    ) {
+    if ((isError || !token.current) && !isLoginPage) {
+      localStorage.removeItem("access_token");
       navigate("/login");
     }
   }, [isError, token.current]);
@@ -56,11 +70,14 @@ function App() {
   useEffect(() => {
     if (data) {
       setUser(data);
+      localStorage.setItem("access_token", data.token);
+      axios.defaults.headers.common["Authorization"] = data.token;
     }
   }, [data]);
 
   return (
-    <RecoilRoot>
+    <Box>
+      <TopBar hidden={!!!user} />
       <Box p={4}>
         {isLoading ? (
           <CircularProgress />
@@ -69,10 +86,11 @@ function App() {
             <Route path="/" element={<Home></Home>} />
             <Route path="/login" element={<Login />}></Route>
             <Route path="/register" element={<Register />}></Route>
+            <Route path="/post" element={<CreatePost />}></Route>
           </Routes>
         )}
       </Box>
-    </RecoilRoot>
+    </Box>
   );
 }
 

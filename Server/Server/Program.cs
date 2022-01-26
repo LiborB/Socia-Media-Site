@@ -9,7 +9,7 @@ var frontendOrigins = "_reactOrigin";
 // Add services to the container.
 builder.Services.AddCors(options => options.AddPolicy(name: frontendOrigins, policyBuilder =>
 
-    policyBuilder.WithOrigins("http://localhost:3002").AllowAnyHeader()
+    policyBuilder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost").AllowAnyHeader()
 ));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

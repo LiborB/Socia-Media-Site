@@ -77,6 +77,8 @@ export default function Register() {
 
   useEffect(() => {
     if (data) {
+      localStorage.setItem("access_token", data.token);
+      axios.defaults.headers.common["Authorization"] = data.token;
       setUser(data);
       navigate("/");
     }
@@ -103,6 +105,7 @@ export default function Register() {
   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     const newFormError = {} as typeof formError;
     if (!firstName) {
       newFormError.firstName = "Please enter your first name.";
@@ -129,7 +132,7 @@ export default function Register() {
   return (
     <RegisterContainer>
       <RegisterContent>
-        <RegisterForm onSubmit={handleSubmit}>
+        <RegisterForm onSubmit={handleSubmit} noValidate>
           <Stack direction="column" spacing={2}>
             <Typography variant="h4">Create a new account</Typography>
             <TextField
@@ -160,6 +163,7 @@ export default function Register() {
               helperText={formError.username}
             />
             <TextField
+              type="password"
               required
               value={password}
               onChange={handlePasswordChange}
@@ -169,6 +173,7 @@ export default function Register() {
               helperText={formError.password}
             />
             <TextField
+              type="password"
               required
               value={confirmPassword}
               onChange={handleConfirmPasswordChange}
@@ -180,6 +185,7 @@ export default function Register() {
 
             <Box display="flex" width="100%" justifyContent="end">
               <LoadingButton
+                size="large"
                 type="submit"
                 loading={isLoading}
                 variant="contained"
