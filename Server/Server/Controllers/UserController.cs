@@ -7,7 +7,7 @@ namespace Server.Controllers;
 
 [ApiController]
 [Route("user")]
-public class UserController : Controller
+public class UserController : BaseController
 {
     private readonly IUserService _service;
     
