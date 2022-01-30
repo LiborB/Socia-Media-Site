@@ -9,8 +9,8 @@ import { userState } from "../store/userStore";
 export default function Home() {
   const user = useRecoilValue(userState);
   const { data: posts } = useQuery(
-    ["homePosts", user?.id],
-    () => axios.get<Post[]>(`/post/${user?.id}`).then((res) => res.data),
+    "homePosts",
+    () => axios.get<Post[]>(`/post/wall`).then((res) => res.data),
     {
       enabled: !!user,
     }

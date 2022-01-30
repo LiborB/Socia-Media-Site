@@ -59,4 +59,48 @@ public class UserController : BaseController
             return Unauthorized("Invalid token.");
         }
     }
+
+    [HttpGet]
+    [Route("search")]
+    [TypeFilter(typeof(AuthFilter))]
+    public ActionResult<IEnumerable<UserSearchItemDTO>> SearchUsers([FromQuery] string query, [FromQuery] int limit = 0)
+    {
+        var users = _service.GetUsersMatchingQuery(query);
+
+        return Ok(users);
+    }
+
+    [HttpPost]
+    [Route("friend/{userId}")]
+    [TypeFilter(typeof(AuthFilter))]
+    public async Task<IActionResult> FriendUser([FromRoute] int userId)
+    {
+        var user = GetCurrentUser();
+
+        await _service.AddFriend(user.Id, userId);
+
+        return Ok();
+    }
+    
+    [HttpPost]
+    [Route("unfriend/{userId}")]
+    [TypeFilter(typeof(AuthFilter))]
+    public async Task<IActionResult> UnfriendUser([FromRoute] int userId)
+    {
+        var user = GetCurrentUser();
+
+        await _service.RemoveFriend(user.Id, userId);
+
+        return Ok();
+    }
+    
+    [HttpGet]
+    [Route("isfriend/{userId}")]
+    [TypeFilter(typeof(AuthFilter))]
+    public ActionResult<bool> IsFriend([FromRoute] int userId)
+    {
+        var user = GetCurrentUser();
+
+        return Ok(_service.IsFriend(user.Id, userId));
+    }
 }

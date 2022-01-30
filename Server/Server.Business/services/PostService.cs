@@ -24,6 +24,16 @@ public class PostService : IPostService
         return _mapper.Map<IEnumerable<PostDTO>>(posts);
     }
 
+    public IEnumerable<PostDTO> GetWallPosts(int userId)
+    {
+        var posts = from post in _context.Posts
+            join f in _context.Friends on post.UserId equals f.FirstUserId
+            where f.FirstUserId == userId || post.UserId == userId
+            select post;
+
+        return _mapper.Map<IEnumerable<PostDTO>>(posts);
+    }
+
     public async Task CreatePost(CreatePostDTO createPostDto)
     {
         _context.Posts.Add(new Post()

@@ -1,5 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Server.Business.Model;
 
+[Index(nameof(Username), nameof(FirstName), nameof(LastName))]
 public class User
 {
     public int Id { get; set; }

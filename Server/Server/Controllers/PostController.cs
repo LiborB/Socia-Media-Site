@@ -34,4 +34,16 @@ public class PostController : BaseController
 
         return Ok(posts);
     }
+
+    [HttpGet]
+    [Route("wall")]
+    [TypeFilter(typeof(AuthFilter))]
+    public ActionResult<IEnumerable<PostDTO>> WallPosts()
+    {
+        var user = GetCurrentUser();
+
+        var posts = _service.GetWallPosts(user.Id);
+
+        return Ok(posts);
+    }
 }

@@ -29,6 +29,7 @@ import { User } from "./models/user";
 import Register from "./components/Register";
 import TopBar from "./components/TopBar";
 import CreatePost from "./components/CreatePost";
+import ProfilePage from "./components/ProfilePage";
 
 function App() {
   const navigate = useNavigate();
@@ -89,6 +90,7 @@ function App() {
             <Route path="/login" element={<Login />}></Route>
             <Route path="/register" element={<Register />}></Route>
             <Route path="/post" element={<CreatePost />}></Route>
+            <Route path="/profile/:userId" element={<ProfilePage />}></Route>
           </Routes>
         )}
       </Box>
