@@ -24,8 +24,8 @@ export default function UserSearchBar() {
     }
   );
 
-  const handleUserClick = (id: number) => {
-    navigate(`/profile/${id}`);
+  const handleUserClick = (username: string) => {
+    navigate(`/profile/${username}`);
   };
 
   return (
@@ -44,7 +44,7 @@ export default function UserSearchBar() {
           <ul>
             {data?.map((userSearchItem) => (
               <li
-                onMouseDown={() => handleUserClick(userSearchItem.id)}
+                onMouseDown={() => handleUserClick(userSearchItem.username)}
                 className="py-2 px-4 cursor-pointer hover:bg-gray-50"
                 key={userSearchItem.id}
               >

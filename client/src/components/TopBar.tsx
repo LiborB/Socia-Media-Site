@@ -2,6 +2,9 @@ import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 import { Box, styled } from "@mui/system";
 import React, { Fragment } from "react";
 import { useNavigate } from "react-router";
+import { useRecoilValue } from "recoil";
+import { userState } from "../store/userStore";
+import ProfileCircle from "./ProfileCircle";
 import UserSearchBar from "./UserSearchBar";
 
 const AppToolbar = styled(Toolbar)({
@@ -13,10 +16,15 @@ interface Props {
 }
 
 function TopBar(props: Props) {
+  const user = useRecoilValue(userState);
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
     navigate("/");
+  };
+
+  const handleProfileClick = () => {
+    navigate(`/profile/${user?.username}`);
   };
 
   return (
@@ -40,6 +48,7 @@ function TopBar(props: Props) {
             >
               New Post
             </Button>
+            <ProfileCircle userId={user?.id} onClick={handleProfileClick} />
           </AppToolbar>
         </AppBar>
       )}

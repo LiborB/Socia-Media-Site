@@ -11,5 +11,6 @@ public interface IUserService
     public IEnumerable<UserSearchItemDTO> GetUsersMatchingQuery(string searchQuery);
     public Task AddFriend(int userId, int userIdToFriend);
     public Task RemoveFriend(int userId, int userIdToUnfriend);
-    public bool IsFriend(int userId, int secondUserId);
+    public Task<bool> IsFriend(int userId, int secondUserId);
+    public Task<ProfileDetailDTO> GetProfileDetail(string username);
 }

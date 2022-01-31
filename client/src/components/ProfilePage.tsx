@@ -1,26 +1,37 @@
 import axios from "axios";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
+import { ProfileDetail } from "../models/profile-detail";
 
 export default function ProfilePage() {
-  const { userId } = useParams();
+  const { username } = useParams();
+
+  const { data: userDetail } = useQuery(["userDetails", username], () =>
+    axios.get<ProfileDetail>(`/user/profile/${username}`).then((x) => x.data)
+  );
 
   const { dataUpdatedAt: addFriendUpdated, refetch: refetchAddFriend } =
-    useQuery("addFriend", () => axios.post(`/user/friend/${userId}`), {
+    useQuery("addFriend", () => axios.post(`/user/friend/${userDetail?.id}`), {
       enabled: false,
     });
 
   const { refetch: refetchUnfriend, dataUpdatedAt: unfriendUpdated } = useQuery(
-    "addFriend",
-    () => axios.post(`/user/unfriend/${userId}`),
+    "removeFriend",
+    () => axios.post(`/user/unfriend/${userDetail?.id}`),
     {
       enabled: false,
     }
   );
 
   const { data: isFriend } = useQuery(
-    ["isfriend", userId, addFriendUpdated, unfriendUpdated],
-    () => axios.get<boolean>(`/user/isfriend/${userId}`).then((x) => x.data)
+    ["isfriend", userDetail?.id, addFriendUpdated, unfriendUpdated],
+    () =>
+      axios
+        .get<boolean>(`/user/isfriend/${userDetail?.id}`)
+        .then((x) => x.data),
+    {
+      enabled: !!userDetail,
+    }
   );
 
   const handleAddFriend = () => {
@@ -33,7 +44,11 @@ export default function ProfilePage() {
 
   return (
     <div>
-      profile {userId}
+      <div className="flex justify-between">
+        <div>profile {username}</div>
+        <div>{userDetail?.numberOfFriends} friends</div>
+      </div>
+
       <div>
         {isFriend ? (
           <button

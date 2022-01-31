@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Server.Domain;
 using Server.Domain.dto;
+using Server.Domain.exceptions;
 using Server.Domain.services;
 
 namespace Server.Controllers;
@@ -97,10 +98,26 @@ public class UserController : BaseController
     [HttpGet]
     [Route("isfriend/{userId}")]
     [TypeFilter(typeof(AuthFilter))]
-    public ActionResult<bool> IsFriend([FromRoute] int userId)
+    public async Task<ActionResult<bool>> IsFriend([FromRoute] int userId)
     {
         var user = GetCurrentUser();
 
-        return Ok(_service.IsFriend(user.Id, userId));
+        return Ok(await _service.IsFriend(user.Id, userId));
+    }
+
+    [HttpGet]
+    [Route("profile/{username}")]
+    [TypeFilter(typeof(AuthFilter))]
+    public async Task<ActionResult<ProfileDetailDTO>> ProfileDetails([FromRoute] string username)
+    {
+        try
+        {
+            var userDetail = await _service.GetProfileDetail(username);
+            return Ok(userDetail);
+        }
+        catch (UserNotFoundException e)
+        {
+            return BadRequest("User not found.");
+        }
     }
 }

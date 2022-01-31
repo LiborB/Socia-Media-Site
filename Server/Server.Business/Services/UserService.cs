@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Server.Business.Model;
 using Server.Domain;
 using Server.Domain.dto;
+using Server.Domain.exceptions;
 using Server.Domain.services;
 
 namespace Server.Business.services;
@@ -114,10 +115,26 @@ public class UserService : IUserService
         }
     }
 
-    public bool IsFriend(int userId, int secondUserId)
+    public async Task<bool> IsFriend(int userId, int secondUserId)
     {
-        return _context.Friends.Any(x =>
+        return await _context.Friends.AnyAsync(x =>
             x.FirstUserId == userId && x.SecondUserId == secondUserId ||
             x.SecondUserId == userId && x.FirstUserId == secondUserId);
+    }
+
+    public async Task<ProfileDetailDTO> GetProfileDetail(string username)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
+
+        if (user == null)
+        {
+            throw new UserNotFoundException();
+        }
+
+        var userDetail = _mapper.Map<ProfileDetailDTO>(user);
+        userDetail.NumberOfFriends =
+            await _context.Friends.CountAsync(x => x.FirstUserId == user.Id || x.SecondUserId == user.Id);
+
+        return userDetail;
     }
 }

@@ -11,5 +11,6 @@ public class AutomapperProfile : Profile
         CreateMap<User, UserDTO>();
         CreateMap<Post, PostDTO>();
         CreateMap<User, UserSearchItemDTO>();
+        CreateMap<User, ProfileDetailDTO>();
     }
 }

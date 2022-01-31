@@ -90,7 +90,7 @@ function App() {
             <Route path="/login" element={<Login />}></Route>
             <Route path="/register" element={<Register />}></Route>
             <Route path="/post" element={<CreatePost />}></Route>
-            <Route path="/profile/:userId" element={<ProfilePage />}></Route>
+            <Route path="/profile/:username" element={<ProfilePage />}></Route>
           </Routes>
         )}
       </Box>
